@@ -1,5 +1,5 @@
 import "./index.scss"
-import { defineComponent,computed, inject } from "vue" 
+import { defineComponent, computed, inject, ref, onMounted} from "vue" 
 
 export default defineComponent({
   props: {
@@ -11,17 +11,28 @@ export default defineComponent({
   setup(props) {
 
     const config = inject("config")
+    const block = props.block
+    const blockRef = ref(null)
 
     const blockStyle = computed(() => ({
-      top: props.block.top,
-      left: props.block.left,
-      zIndex: props.block.zIndex
+      top: block.top,
+      left: block.left,
+      zIndex: block.zIndex
     }))
 
+    onMounted(() => {
+      if(block.alignCenter) {
+        const { offsetWidth,offsetHeight } = blockRef.value
+        block.top = `${parseFloat(block.top) - offsetHeight / 2}px`
+        block.left = `${parseFloat(block.left) - offsetWidth / 2}px`
+        block.alignCenter = false
+      }
+    })
+
     return () => {
-      const component = config.componentMap[props.block.key]
+      const component = config.componentMap[block.key]
       const RenderComponent = component.render()
-      return <div class="editor-block" style={blockStyle.value}>
+      return <div ref={blockRef} class="editor-block" style={blockStyle.value}>
         {
           RenderComponent
         }

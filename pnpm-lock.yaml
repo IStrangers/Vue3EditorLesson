@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@vitejs/plugin-vue': ^3.1.0
   '@vitejs/plugin-vue-jsx': ^2.0.1
+  deepcopy: ^2.1.0
   element-plus: ^2.2.16
   sass: ^1.54.8
   vite: ^3.1.0
@@ -10,6 +11,7 @@ specifiers:
 
 dependencies:
   '@vitejs/plugin-vue-jsx': registry.npmmirror.com/@vitejs/plugin-vue-jsx/2.0.1_vite@3.1.0+vue@3.2.38
+  deepcopy: registry.npmmirror.com/deepcopy/2.1.0
   element-plus: registry.npmmirror.com/element-plus/2.2.16_vue@3.2.38
   sass: registry.npmmirror.com/sass/1.54.8
   vue: registry.npmmirror.com/vue/3.2.38
@@ -830,6 +832,14 @@ packages:
       ms: registry.npmmirror.com/ms/2.1.2
     dev: false
 
+  registry.npmmirror.com/deepcopy/2.1.0:
+    resolution: {integrity: sha512-8cZeTb1ZKC3bdSCP6XOM1IsTczIO73fdqtwa2B0N15eAz7gmyhQo+mc5gnFuulsgN3vIQYmTgbmQVKalH1dKvQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/deepcopy/-/deepcopy-2.1.0.tgz}
+    name: deepcopy
+    version: 2.1.0
+    dependencies:
+      type-detect: registry.npmmirror.com/type-detect/4.0.8
+    dev: false
+
   registry.npmmirror.com/electron-to-chromium/1.4.242:
     resolution: {integrity: sha512-nPdgMWtjjWGCtreW/2adkrB2jyHjClo9PtVhR6rW+oxa4E4Wom642Tn+5LslHP3XPL5MCpkn5/UEY60EXylNeQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/electron-to-chromium/-/electron-to-chromium-1.4.242.tgz}
     name: electron-to-chromium
@@ -1446,6 +1456,13 @@ packages:
     engines: {node: '>=8.0'}
     dependencies:
       is-number: registry.npmmirror.com/is-number/7.0.0
+
+  registry.npmmirror.com/type-detect/4.0.8:
+    resolution: {integrity: sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/type-detect/-/type-detect-4.0.8.tgz}
+    name: type-detect
+    version: 4.0.8
+    engines: {node: '>=4'}
+    dev: false
 
   registry.npmmirror.com/update-browserslist-db/1.0.7_browserslist@4.21.3:
     resolution: {integrity: sha512-iN/XYesmZ2RmmWAiI4Z5rq0YqSiv0brj9Ce9CfhNE4xIW2h+MFxcgkxIzZ+ShkFPUkjU3gQ+3oypadD3RAMtrg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/update-browserslist-db/-/update-browserslist-db-1.0.7.tgz}

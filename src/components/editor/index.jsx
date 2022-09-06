@@ -1,6 +1,10 @@
 import "./index.scss"
-import { defineComponent, computed, provide } from "vue" 
+import { defineComponent, computed, provide, ref } from "vue" 
 import EditorBlock from "../editor-block"
+import deepcopy from "deepcopy"
+import { useMenuDragger } from "./use-menu-dragger"
+import { useFocus } from "./use-focus"
+import { useBlockDragger } from "./use-block-Dragger"
 
 export default defineComponent({
   props: {
@@ -12,7 +16,10 @@ export default defineComponent({
       require: true
     }
   },
-  setup(props) {
+  emits: [
+    "update:modelValue"
+  ],
+  setup(props,ctx) {
 
     const config = props.config
     provide("config",config)
@@ -20,6 +27,9 @@ export default defineComponent({
     const data = computed({
       get() {
         return props.modelValue
+      },
+      set(newValue) {
+        ctx.emit("update:modelValue",deepcopy(newValue))
       }
     })
 
@@ -28,13 +38,24 @@ export default defineComponent({
       height: data.value.container.height
     }))
 
+    const containerRef = ref(null)
+    const { dragstart,dragend } = useMenuDragger(containerRef,data)
+    const { focusData,blockMousedown,containerMousedown } = useFocus(data,(event) => {
+      mousedown(event)
+    })
+    const { mousedown } = useBlockDragger(focusData)
 
     return () => 
       <div class="editor">
         <div class="editor-left">
           {
             config.componentList.map(component => (
-              <div class="left-item">
+              <div 
+                class="left-item"
+                draggable
+                onDragstart={event => dragstart(event,component)}
+                onDragend={event => dragend(event)}
+              >
                 <span>{component.label}</span>
                 <div>{component.preview()}</div>
               </div>
@@ -49,10 +70,19 @@ export default defineComponent({
         </div>
         <div class="editor-container">
           <div class="container-canvas">
-            <div class="canvas-content" style={containerStyles.value}>
+            <div 
+              ref={containerRef} 
+              class="canvas-content" 
+              style={containerStyles.value}
+              onMousedown={event => containerMousedown(event)}
+            >
               {
                 data.value.blocks.map(block => (
-                  <EditorBlock block={block}></EditorBlock>
+                  <EditorBlock 
+                    class={block.focus ? "block-focus" : ''}
+                    block={block}
+                    onMousedown={event => blockMousedown(event,block)}
+                  ></EditorBlock>
                 ))
               }
             </div>
