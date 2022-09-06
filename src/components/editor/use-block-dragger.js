@@ -1,6 +1,6 @@
 import { reactive } from "vue"
 
-export function useBlockDragger(data,focusData,lastSelectBlock) {
+export function useBlockDragger(containerRef,focusData,lastSelectBlock) {
   let dragState
   const markline = reactive({
     x: null,
@@ -22,13 +22,13 @@ export function useBlockDragger(data,focusData,lastSelectBlock) {
         const { unfocus } = focusData.value
         const lines = { x: [], y: [] }
         const unfocusBlocks = [
+          ...unfocus,
           {
             top: 0,
             left: 0,
-            width: parseFloat(data.value.container.width),
-            height: parseFloat(data.value.container.height)
-          },
-          ...unfocus
+            width: containerRef.value.offsetWidth,
+            height: containerRef.value.offsetHeight
+          }
         ]
         unfocusBlocks.forEach(block => {
           const top = parseFloat(block.top)

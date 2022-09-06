@@ -43,7 +43,7 @@ export default defineComponent({
     const { focusData,lastSelectBlock,blockMousedown,containerMousedown } = useFocus(data,(event) => {
       mousedown(event)
     })
-    const { markline,mousedown } = useBlockDragger(data,focusData,lastSelectBlock)
+    const { markline,mousedown } = useBlockDragger(containerRef,focusData,lastSelectBlock)
 
     return () => 
       <div class="editor">
