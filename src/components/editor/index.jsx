@@ -40,10 +40,10 @@ export default defineComponent({
 
     const containerRef = ref(null)
     const { dragstart,dragend } = useMenuDragger(containerRef,data)
-    const { focusData,blockMousedown,containerMousedown } = useFocus(data,(event) => {
+    const { focusData,lastSelectBlock,blockMousedown,containerMousedown } = useFocus(data,(event) => {
       mousedown(event)
     })
-    const { mousedown } = useBlockDragger(focusData)
+    const { markline,mousedown } = useBlockDragger(data,focusData,lastSelectBlock)
 
     return () => 
       <div class="editor">
@@ -77,13 +77,19 @@ export default defineComponent({
               onMousedown={event => containerMousedown(event)}
             >
               {
-                data.value.blocks.map(block => (
+                data.value.blocks.map((block,index) => (
                   <EditorBlock 
                     class={block.focus ? "block-focus" : ''}
                     block={block}
-                    onMousedown={event => blockMousedown(event,block)}
+                    onMousedown={event => blockMousedown(event,block,index)}
                   ></EditorBlock>
                 ))
+              }
+              {
+                markline.x !== null && <div class="line-x" style={{left: `${markline.x}px`}}></div>
+              }
+              {
+                markline.y !== null && <div class="line-y" style={{top: `${markline.y}px`}}></div>
               }
             </div>
           </div>

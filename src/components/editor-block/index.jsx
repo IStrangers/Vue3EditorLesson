@@ -21,12 +21,14 @@ export default defineComponent({
     }))
 
     onMounted(() => {
+      const { offsetWidth,offsetHeight } = blockRef.value
       if(block.alignCenter) {
-        const { offsetWidth,offsetHeight } = blockRef.value
         block.top = `${parseFloat(block.top) - offsetHeight / 2}px`
         block.left = `${parseFloat(block.left) - offsetWidth / 2}px`
         block.alignCenter = false
       }
+      block.width = `${offsetWidth}px`
+      block.height = `${offsetHeight}px`
     })
 
     return () => {
