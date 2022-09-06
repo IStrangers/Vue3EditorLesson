@@ -1,7 +1,7 @@
 {
   "container": {
-    "width": "1000px",
-    "height": "calc(100vh - 140px)"
+    "width": "1300px",
+    "height": "calc(100vh - 110px)"
   },
   "blocks": [
     {

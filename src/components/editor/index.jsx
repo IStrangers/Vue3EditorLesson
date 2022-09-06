@@ -5,6 +5,7 @@ import deepcopy from "deepcopy"
 import { useMenuDragger } from "./use-menu-dragger"
 import { useFocus } from "./use-focus"
 import { useBlockDragger } from "./use-block-Dragger"
+import { useCommand } from "./use-command"
 
 export default defineComponent({
   props: {
@@ -44,14 +45,15 @@ export default defineComponent({
       mousedown(event)
     })
     const { markline,mousedown } = useBlockDragger(containerRef,focusData,lastSelectBlock)
-
+    const command = useCommand(data)
+    
     return () => 
       <div class="editor">
         <div class="editor-left">
           {
             config.componentList.map(component => (
               <div 
-                class="left-item"
+                class="component-item"
                 draggable
                 onDragstart={event => dragstart(event,component)}
                 onDragend={event => dragend(event)}
@@ -63,7 +65,15 @@ export default defineComponent({
           }
         </div>
         <div class="editor-top">
-
+          {
+            config.toolbarList.map(toolbar => {
+              const RenderToolbar = toolbar.render()
+              return <div class="toolbar-item" onClick={command.commands[toolbar.commandName]}>
+                {RenderToolbar}
+                <span>{toolbar.label}</span>
+              </div>
+            })
+          }
         </div>
         <div class="editor-right">
 
@@ -77,13 +87,14 @@ export default defineComponent({
               onMousedown={event => containerMousedown(event)}
             >
               {
-                data.value.blocks.map((block,index) => (
-                  <EditorBlock 
+                data.value.blocks.map((block,index) => {
+                  console.log(block)
+                  return <EditorBlock 
                     class={block.focus ? "block-focus" : ''}
                     block={block}
                     onMousedown={event => blockMousedown(event,block,index)}
                   ></EditorBlock>
-                ))
+                })
               }
               {
                 markline.x !== null && <div class="line-x" style={{left: `${markline.x}px`}}></div>

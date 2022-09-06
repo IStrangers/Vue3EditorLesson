@@ -1,22 +1,27 @@
-import { ElButton, ElInput } from "element-plus"
+import { Back, Right } from "@element-plus/icons-vue"
+import { ElButton, ElIcon, ElInput } from "element-plus"
 
 function createEditorConfig() {
   const componentList = []
   const componentMap = {}
-
+  const toolbarList = []
   return {
     componentList,
     componentMap,
-    register: (component) => {
+    toolbarList,
+    registerComponent: (component) => {
       componentList.push(component)
       componentMap[component.key] = component
+    },
+    registerToolbar: (toolbar) => {
+      toolbarList.push(toolbar)
     }
   }
 }
 
 export const registerConfig = createEditorConfig()
 
-registerConfig.register({
+registerConfig.registerComponent({
   key: "text",
   label: "文本",
   preview: () => {
@@ -26,7 +31,7 @@ registerConfig.register({
     return "渲染文本"
   },
 })
-registerConfig.register({
+registerConfig.registerComponent({
   key: "button",
   label: "按钮",
   preview: () => {
@@ -40,12 +45,12 @@ registerConfig.register({
     </ElButton>
   },
 })
-registerConfig.register({
+registerConfig.registerComponent({
   key: "input",
   label: "输入框",
   preview: () => {
     return <ElInput placeholder="预览输入框">
-      
+
     </ElInput>
   },
   render: () => {
@@ -53,4 +58,24 @@ registerConfig.register({
       
     </ElInput>
   },
+})
+
+
+registerConfig.registerToolbar({
+  label: "撤销",
+  render: () => {
+    return <ElIcon>
+      <Back></Back>
+    </ElIcon>
+  },
+  commandName: "undo",
+})
+registerConfig.registerToolbar({
+  label: "重做",
+  render: () => {
+    return <ElIcon>
+      <Right></Right>
+    </ElIcon>
+  },
+  commandName: "redo",
 })

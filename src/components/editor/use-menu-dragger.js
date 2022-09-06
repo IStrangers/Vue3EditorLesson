@@ -1,3 +1,4 @@
+import { events } from "./events"
 
 export function useMenuDragger(containerRef,data) {
 
@@ -31,17 +32,21 @@ export function useMenuDragger(containerRef,data) {
   }
 
   const dragstart = (event,component) => {
+    containerRef.value.classList.add("hover")
     containerRef.value.addEventListener("dragenter",dragenter)
     containerRef.value.addEventListener("dragover",dragover)
     containerRef.value.addEventListener("dragleave",dragleave)
     containerRef.value.addEventListener("drop",drop)
     currentComponent = component
+    events.emit("componentDragStart")
   }
   const dragend = (event) => {
+    containerRef.value.classList.remove("hover")
     containerRef.value.removeEventListener("dragenter",dragenter)
     containerRef.value.removeEventListener("dragover",dragover)
     containerRef.value.removeEventListener("dragleave",dragleave)
     containerRef.value.removeEventListener("drop",drop)
+    events.emit("componentDragEnd")
   }
 
   return {

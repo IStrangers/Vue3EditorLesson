@@ -1,4 +1,5 @@
 import { reactive } from "vue"
+import { events } from "./events"
 
 export function useBlockDragger(containerRef,focusData,lastSelectBlock) {
   let dragState
@@ -13,6 +14,7 @@ export function useBlockDragger(containerRef,focusData,lastSelectBlock) {
     const lsbWidth = parseFloat(block.width)
     const lsbHeight = parseFloat(block.height)
     dragState = {
+      dragging: false,
       startX: event.clientX,
       startY: event.clientY,
       startLeft: lasbLeft,
@@ -55,6 +57,11 @@ export function useBlockDragger(containerRef,focusData,lastSelectBlock) {
     document.addEventListener("mouseup",mouseup)
   }
   const mousemove = (event) => {
+    if(!dragState.dragging) {
+      dragState.dragging = true
+      events.emit("componentDragStart")
+    }
+
     let { clientX,clientY } = event
     const { startX,startY,startLeft,startTop,lines } = dragState
     const lsbLeft = clientX - startX + startLeft
@@ -89,6 +96,9 @@ export function useBlockDragger(containerRef,focusData,lastSelectBlock) {
     })
   }
   const mouseup = (event) => {
+    if(dragState.dragging) {
+      events.emit("componentDragEnd")
+    }
     document.removeEventListener("mousemove",mousemove)
     document.removeEventListener("mouseup",mouseup)
     markline.x = null
