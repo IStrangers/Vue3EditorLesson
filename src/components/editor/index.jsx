@@ -88,7 +88,6 @@ export default defineComponent({
             >
               {
                 data.value.blocks.map((block,index) => {
-                  console.log(block)
                   return <EditorBlock 
                     class={block.focus ? "block-focus" : ''}
                     block={block}

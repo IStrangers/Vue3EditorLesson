@@ -1,5 +1,6 @@
 import deepcopy from "deepcopy"
 import { onUnmounted } from "vue"
+import { $dialog$ } from "../dialog"
 import { events } from "./events"
 
 export function useCommand(data) {
@@ -15,8 +16,8 @@ export function useCommand(data) {
   const registry = (command) => {
     const { commandArray,commands,queue } = state
     commandArray.push(command)
-    commands[command.name] = () => {
-      const { redo,undo } = command.execute()
+    commands[command.name] = (...args) => {
+      const { redo,undo } = command.execute(...args)
       redo()
       if(!command.pushQueue) {
         return
@@ -87,9 +88,62 @@ export function useCommand(data) {
       }
     }
   })
+  registry({
+    name: "export",
+    keyboard: "ctrl+c",
+    execute() {
+      const dialog = $dialog$({
+        title: "导出",
+        preview: true,
+        content: deepcopy(data.value)
+      })
+      return {
+        redo() {
+          dialog.showDialog()
+        }
+      }
+    }
+  })
+  registry({
+    name: "import",
+    keyboard: "ctrl+i",
+    execute() {
+      const dialog = $dialog$({
+        title: "导入",
+        content: "",
+        footer: true,
+        onConfirm(content) {
+          state.commands.updateContainer(JSON.parse(content))
+        }
+      })
+      return {
+        redo() {
+          dialog.showDialog()
+        }
+      }
+    }
+  })
+  registry({
+    name: "updateContainer",
+    pushQueue: true,
+    execute(newValue) {
+      const before = data.value
+      const after = newValue
+      return {
+        redo() {
+          data.value = after
+        },
+        undo() {
+          data.value = before
+        }
+      }
+    }
+  })
 
   const keyboardEvent = (() => {
     const keyCodes = {
+      67: "c",
+      73: "i",
       89: "y",
       90: "z"
     }

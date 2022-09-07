@@ -1,4 +1,4 @@
-import { Back, Right } from "@element-plus/icons-vue"
+import { Back, Expand, Fold, Right } from "@element-plus/icons-vue"
 import { ElButton, ElIcon, ElInput } from "element-plus"
 
 function createEditorConfig() {
@@ -78,4 +78,22 @@ registerConfig.registerToolbar({
     </ElIcon>
   },
   commandName: "redo",
+})
+registerConfig.registerToolbar({
+  label: "导出",
+  render: () => {
+    return <ElIcon>
+      <Expand></Expand>
+    </ElIcon>
+  },
+  commandName: "export",
+})
+registerConfig.registerToolbar({
+  label: "导入",
+  render: () => {
+    return <ElIcon>
+      <Fold></Fold>
+    </ElIcon>
+  },
+  commandName: "import",
 })
