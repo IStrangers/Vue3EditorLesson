@@ -8,6 +8,7 @@ import { useBlockDragger } from "./use-block-Dragger"
 import { useCommand } from "./use-command"
 import { ElButton } from "element-plus"
 import { $dropdown$ } from "../dropdown"
+import EditorOperator from "../editor-operator"
 
 export default defineComponent({
   name: "Editor",
@@ -97,7 +98,7 @@ export default defineComponent({
             }
           </div>
           <div class="editor-right">
-
+            <EditorOperator block={lastSelectBlock.value} data={data.value}></EditorOperator>
           </div>
           <div class="editor-container">
             <div class="container-canvas">

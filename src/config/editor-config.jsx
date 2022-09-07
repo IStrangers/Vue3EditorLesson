@@ -29,6 +29,56 @@ function createEditorConfig() {
 
 export const registerConfig = createEditorConfig()
 
+const fontSizeOptions = [
+  { label: "12px",value: "12px"},
+  { label: "13px",value: "13px"},
+  { label: "14px",value: "14px"},
+  { label: "15px",value: "15px"},
+  { label: "16px",value: "16px"},
+  { label: "17px",value: "17px"},
+  { label: "18px",value: "18px"},
+  { label: "19px",value: "19px"},
+  { label: "20px",value: "20px"},
+  { label: "21px",value: "21px"},
+  { label: "22px",value: "22px"},
+  { label: "23px",value: "23px"},
+  { label: "24px",value: "24px"},
+]
+
+const buttonSizeOptions = [
+  { label: "默认",value: "" },
+  { label: "中等",value: "medium" },
+  { label: "小",value: "small" },
+  { label: "极小",value: "mini" },
+] 
+const buttonTypeOptions = [
+  { label: "默认",value: "primary" },
+  { label: "成功",value: "success" },
+  { label: "警告",value: "warning" },
+  { label: "危险",value: "danger" },
+  { label: "文本",value: "text" },
+]
+
+const createInputProp = (label) => {
+  return {
+    type: "input",
+    label,
+  }
+}
+const createColorProp = (label) => {
+  return {
+    type: "color",
+    label,
+  }
+}
+const createSelectProp = (label,options) => {
+  return {
+    type: "select",
+    label,
+    options,
+  }
+}
+
 registerConfig.registerComponent({
   key: "text",
   label: "文本",
@@ -38,6 +88,11 @@ registerConfig.registerComponent({
   render: () => {
     return "渲染文本"
   },
+  props: {
+    text: createInputProp("文本内容"),
+    color: createColorProp("字体颜色"),
+    size: createSelectProp("字体大小",fontSizeOptions),
+  }
 })
 registerConfig.registerComponent({
   key: "button",
@@ -52,6 +107,12 @@ registerConfig.registerComponent({
       渲染按钮
     </ElButton>
   },
+  props: {
+    text: createInputProp("按钮内容"),
+    color: createColorProp("字体颜色"),
+    size: createSelectProp("按钮类型",buttonSizeOptions),
+    type: createSelectProp("按钮类型",buttonTypeOptions),
+  }
 })
 registerConfig.registerComponent({
   key: "input",
@@ -66,6 +127,9 @@ registerConfig.registerComponent({
       
     </ElInput>
   },
+  props: {
+
+  }
 })
 
 
