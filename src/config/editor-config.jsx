@@ -1,20 +1,28 @@
 import { Back, Close, CopyDocument, Delete, Edit, Expand, Fold, Right, View } from "@element-plus/icons-vue"
+import deepcopy from "deepcopy"
 import { ElButton, ElIcon, ElInput } from "element-plus"
+import { $dialog$ } from "../components/dialog"
+import { DropdownItem } from "../components/dropdown"
 
 function createEditorConfig() {
   const componentList = []
   const componentMap = {}
   const toolbarList = []
+  const dropdownMenuList = []
   return {
     componentList,
     componentMap,
     toolbarList,
+    dropdownMenuList,
     registerComponent: (component) => {
       componentList.push(component)
       componentMap[component.key] = component
     },
     registerToolbar: (toolbar) => {
       toolbarList.push(toolbar)
+    },
+    registerDropdownMenu: (dropdownMenu) => {
+      dropdownMenuList.push(dropdownMenu)
     }
   }
 }
@@ -59,6 +67,7 @@ registerConfig.registerComponent({
     </ElInput>
   },
 })
+
 
 
 registerConfig.registerToolbar({
@@ -150,4 +159,43 @@ registerConfig.registerToolbar({
   handler() {
     
   },
+})
+
+
+registerConfig.registerDropdownMenu(({command}) => {
+  return <DropdownItem onClick={() => {
+    command.commands.deleteComponent()
+  }}>
+    <Delete></Delete>
+    <span>删除</span>
+  </DropdownItem>
+})
+registerConfig.registerDropdownMenu(({command}) => {
+  return <DropdownItem onClick={() => {
+    command.commands.placeTop()
+  }}>
+    <CopyDocument></CopyDocument>
+    <span>置顶</span>
+  </DropdownItem>
+})
+registerConfig.registerDropdownMenu(({command}) => {
+  return <DropdownItem onClick={() => {
+    command.commands.placeBottom()
+  }}>
+    <CopyDocument></CopyDocument>
+    <span>置底</span>
+  </DropdownItem>
+})
+registerConfig.registerDropdownMenu(({block,command}) => {
+  return <DropdownItem onClick={() => {
+    const dialog = $dialog$({
+      title: "查看",
+      preview: true,
+      content: deepcopy(block)
+    })
+    dialog.showDialog()
+  }}>
+    <View></View>
+    <span>查看</span>
+  </DropdownItem>
 })

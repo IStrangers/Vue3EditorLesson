@@ -104,7 +104,6 @@
     height: 100%;
     box-sizing: border-box;
     .container-canvas {
-      overflow: scroll;
       height: 100%;
 
       .canvas-content{
@@ -113,7 +112,7 @@
         margin: 20px auto;
         width: 1000px;
         background: #fff;
-        height: calc(100vh - 110px);
+        height: calc(100vh - 85px);
         overflow: hidden;
         &:hover,
         &.hover {

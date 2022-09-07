@@ -5,6 +5,7 @@ import { JsonViewer } from "vue3-json-viewer/dist/bundle.cjs";
 import "vue3-json-viewer/dist/index.css"
 
 const DialogComponent = defineComponent({
+  name: "DialogComponent",
   props: {
     option: {
       type: Object

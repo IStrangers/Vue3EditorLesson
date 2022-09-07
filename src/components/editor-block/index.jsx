@@ -2,6 +2,7 @@ import "./index.scss"
 import { defineComponent, computed, inject, ref, onMounted} from "vue" 
 
 export default defineComponent({
+  name: "BlockComponent",
   props: {
     block: {
       type: Object,

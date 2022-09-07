@@ -7,8 +7,10 @@ import { useFocus } from "./use-focus"
 import { useBlockDragger } from "./use-block-Dragger"
 import { useCommand } from "./use-command"
 import { ElButton } from "element-plus"
+import { $dropdown$ } from "../dropdown"
 
 export default defineComponent({
+  name: "Editor",
   props: {
     modelValue: {
       type: Object,
@@ -43,37 +45,26 @@ export default defineComponent({
 
     const containerRef = ref(null)
     const { dragstart,dragend } = useMenuDragger(containerRef,data)
-    const focusUse = useFocus(data,previewRef,(event) => {
+    const focusUse = useFocus(data,(event) => {
       mousedown(event)
     })
     const { focusData,lastSelectBlock,blockMousedown,containerMousedown } = focusUse
     const { markline,mousedown } = useBlockDragger(containerRef,focusData,lastSelectBlock)
     const command = useCommand(data,focusData)
     
+    const onContextMenuBlock = (event,block) => {
+      event.preventDefault()
+      const dropdown = $dropdown$({
+        el: event.target,
+        render: () => {
+          return props.config.dropdownMenuList.map(dropdownMenu => dropdownMenu({block,command}))
+        }
+      })
+      dropdown.showDropdown()
+    }
+
     return () => 
-      previewRef.value ?
-      (
-        <div class="container-canvas-preview">
-          <div 
-            ref={containerRef} 
-            class="canvas-content"
-            style={containerStyles.value}
-          >
-            {
-              data.value.blocks.map((block,index) => {
-                return <EditorBlock 
-                  class={previewRef.value ? "block-preview" : ''}
-                  block={block}
-                ></EditorBlock>
-              })
-            }
-          </div>
-          <div class="footer">
-            <ElButton type="primary" onClick={() => previewRef.value=false}>返回</ElButton>
-          </div>
-        </div>
-      )
-      :
+      !previewRef.value ?
       (
         <div class="editor">
           <div class="editor-left">
@@ -115,6 +106,7 @@ export default defineComponent({
                 class="canvas-content" 
                 style={containerStyles.value}
                 onMousedown={event => containerMousedown(event)}
+                onContextmenu={event => event.preventDefault()}
               >
                 {
                   data.value.blocks.map((block,index) => {
@@ -123,6 +115,7 @@ export default defineComponent({
                       class={previewRef.value ? "block-preview" : ''}
                       block={block}
                       onMousedown={event => blockMousedown(event,block,index)}
+                      onContextmenu={event => onContextMenuBlock(event,block)}
                     ></EditorBlock>
                   })
                 }
@@ -134,6 +127,28 @@ export default defineComponent({
                 }
               </div>
             </div>
+          </div>
+        </div>
+      )
+      :
+      (
+        <div class="container-canvas-preview">
+          <div 
+            ref={containerRef} 
+            class="canvas-content"
+            style={containerStyles.value}
+          >
+            {
+              data.value.blocks.map((block,index) => {
+                return <EditorBlock 
+                  class={previewRef.value ? "block-preview" : ''}
+                  block={block}
+                ></EditorBlock>
+              })
+            }
+          </div>
+          <div class="footer">
+            <ElButton type="primary" onClick={() => previewRef.value=false}>返回</ElButton>
           </div>
         </div>
       )

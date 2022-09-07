@@ -18,7 +18,7 @@
     margin: 0;
   }
   .app {
-    position: relative;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
