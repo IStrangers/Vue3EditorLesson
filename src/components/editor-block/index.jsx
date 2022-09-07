@@ -12,7 +12,6 @@ export default defineComponent({
 
     const config = inject("config")
     const blockRef = ref(null)
-
     const blockStyle = computed(() => ({
       top: props.block.top,
       left: props.block.left,

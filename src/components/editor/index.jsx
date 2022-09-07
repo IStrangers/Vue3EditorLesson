@@ -22,8 +22,8 @@ export default defineComponent({
   ],
   setup(props,ctx) {
 
-    const config = props.config
-    provide("config",config)
+    const previewRef = ref(false)
+    provide("config",props.config)
 
     const data = computed({
       get() {
@@ -41,17 +41,18 @@ export default defineComponent({
 
     const containerRef = ref(null)
     const { dragstart,dragend } = useMenuDragger(containerRef,data)
-    const { focusData,lastSelectBlock,blockMousedown,containerMousedown } = useFocus(data,(event) => {
+    const focusUse = useFocus(data,previewRef,(event) => {
       mousedown(event)
     })
+    const { focusData,lastSelectBlock,blockMousedown,containerMousedown } = focusUse
     const { markline,mousedown } = useBlockDragger(containerRef,focusData,lastSelectBlock)
-    const command = useCommand(data)
+    const command = useCommand(data,focusData)
     
     return () => 
       <div class="editor">
         <div class="editor-left">
           {
-            config.componentList.map(component => (
+            props.config.componentList.map(component => (
               <div 
                 class="component-item"
                 draggable
@@ -66,9 +67,12 @@ export default defineComponent({
         </div>
         <div class="editor-top">
           {
-            config.toolbarList.map(toolbar => {
+            props.config.toolbarList.map(toolbar => {
+              if(typeof toolbar === "function") {
+                toolbar = toolbar(previewRef,focusUse)
+              }
               const RenderToolbar = toolbar.render()
-              return <div class="toolbar-item" onClick={command.commands[toolbar.commandName]}>
+              return <div class="toolbar-item" onClick={toolbar.handler ? toolbar.handler : command.commands[toolbar.commandName]}>
                 {RenderToolbar}
                 <span>{toolbar.label}</span>
               </div>
@@ -90,6 +94,7 @@ export default defineComponent({
                 data.value.blocks.map((block,index) => {
                   return <EditorBlock 
                     class={block.focus ? "block-focus" : ''}
+                    class={previewRef.value ? "block-preview" : ''}
                     block={block}
                     onMousedown={event => blockMousedown(event,block,index)}
                   ></EditorBlock>

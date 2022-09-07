@@ -3,7 +3,7 @@ import { onUnmounted } from "vue"
 import { $dialog$ } from "../dialog"
 import { events } from "./events"
 
-export function useCommand(data) {
+export function useCommand(data,focusData) {
 
   const state = {
     current: -1,
@@ -139,7 +139,74 @@ export function useCommand(data) {
       }
     }
   })
-
+  registry({
+    name: "placeTop",
+    pushQueue: true,
+    execute() {
+      const before = deepcopy(data.value.blocks)
+      const after = (() => {
+        const { focus,unfocus } = focusData.value
+        const maxZIndex = unfocus.reduce((prev,block) => {
+          return Math.max(prev,block.zIndex)
+        },-Infinity)
+        focus.forEach(block => block.zIndex = maxZIndex + 1)
+        return data.value.blocks
+      })()
+      return {
+        redo() {
+          data.value = { ...data.value, blocks: after }
+        },
+        undo() {
+          data.value = { ...data.value, blocks: before }
+        }
+      }
+    }
+  })
+  registry({
+    name: "placeBottom",
+    pushQueue: true,
+    execute() {
+      const before = deepcopy(data.value.blocks)
+      const after = (() => {
+        const { focus,unfocus } = focusData.value
+        let minZIndex = unfocus.reduce((prev,block) => {
+          return Math.min(prev,block.zIndex)
+        },-Infinity) - 1
+        if(minZIndex < 0) {
+          minZIndex = 0
+          const dur = Math.abs(minZIndex)
+          unfocus.forEach(block => block.zIndex += dur)
+        }
+        focus.forEach(block => block.zIndex = minZIndex)
+        return data.value.blocks
+      })()
+      return {
+        redo() {
+          data.value = { ...data.value, blocks: after }
+        },
+        undo() {
+          data.value = { ...data.value, blocks: before }
+        }
+      }
+    }
+  })
+  registry({
+    name: "deleteComponent",
+    pushQueue: true,
+    execute() {
+      const before = deepcopy(data.value.blocks)
+      const after = focusData.value.unfocus
+      return {
+        redo() {
+          data.value = { ...data.value, blocks: after }
+        },
+        undo() {
+          data.value = { ...data.value, blocks: before }
+        }
+      }
+    }
+  })
+  
   const keyboardEvent = (() => {
     const keyCodes = {
       67: "c",

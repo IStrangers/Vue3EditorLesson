@@ -20,4 +20,9 @@
       border: 1px solid $primary;
     }
   }
+  &.block-preview {
+    &::after {
+      display: none;
+    }
+  }
 }
