@@ -19,6 +19,9 @@ export default defineComponent({
     config: {
       type: Object,
       require: true
+    },
+    formData: {
+      type: Object,
     }
   },
   emits: [
@@ -98,7 +101,12 @@ export default defineComponent({
             }
           </div>
           <div class="editor-right">
-            <EditorOperator block={lastSelectBlock.value} data={data.value}></EditorOperator>
+            <EditorOperator 
+              block={lastSelectBlock.value} 
+              data={data.value}
+              updateContainer={command.commands.updateContainer}
+              updateBlockComponent={command.commands.updateBlockComponent}
+            ></EditorOperator>
           </div>
           <div class="editor-container">
             <div class="container-canvas">
@@ -117,6 +125,7 @@ export default defineComponent({
                       block={block}
                       onMousedown={event => blockMousedown(event,block,index)}
                       onContextmenu={event => onContextMenuBlock(event,block)}
+                      formData={props.formData}
                     ></EditorBlock>
                   })
                 }
@@ -144,6 +153,7 @@ export default defineComponent({
                 return <EditorBlock 
                   class={previewRef.value ? "block-preview" : ''}
                   block={block}
+                  formData={props.formData}
                 ></EditorBlock>
               })
             }

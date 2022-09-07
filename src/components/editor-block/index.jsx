@@ -2,12 +2,15 @@ import "./index.scss"
 import { defineComponent, computed, inject, ref, onMounted} from "vue" 
 
 export default defineComponent({
-  name: "BlockComponent",
+  name: "Block",
   props: {
     block: {
       type: Object,
       require: true
-    }
+    },
+    formData: {
+      type: Object,
+    },
   },
   setup(props) {
 
@@ -32,7 +35,17 @@ export default defineComponent({
 
     return () => {
       const component = config.componentMap[props.block.key]
-      const RenderComponent = component.render()
+      const RenderComponent = component.render({
+        props: props.block.props,
+        model: Object.keys(component.model || {}).reduce((prev,modelName) => {
+          const propName = props.block.model[modelName]
+          prev[modelName] = {
+            modelValue: props.formData[propName],
+            "onUpdate:modelValue": value => rops.formData[propName] = value
+          }
+          return prev
+        },{})
+      })
       return <div ref={blockRef} class="editor-block" style={blockStyle.value}>
         {
           RenderComponent

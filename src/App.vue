@@ -4,11 +4,16 @@
   import { registerConfig } from "./config/editor-config.jsx"
   import Editor from "./components/editor"
   const state = ref(data)
+  const formData = ref({
+    userName: "用户名称",
+    start: 0,
+    end: 100,
+  })
 </script>
 
 <template>
   <div class="app">
-    <Editor v-model="state" :config="registerConfig"></Editor>
+    <Editor v-model="state" :config="registerConfig" :formData="formData"></Editor>
   </div>
 </template>
 

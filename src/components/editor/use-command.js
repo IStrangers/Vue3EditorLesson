@@ -140,6 +140,29 @@ export function useCommand(data,focusData) {
     }
   })
   registry({
+    name: "updateBlockComponent",
+    pushQueue: true,
+    execute(newBlock,oldBlock) {
+      const before = data.value.blocks
+      const after = (() => {
+        const blocks = [...data.value.blocks]
+        const index = data.value.blocks.indexOf(oldBlock)
+        if(index != -1) {
+          blocks.splice(index,1,newBlock)
+        }
+        return blocks
+      })()
+      return {
+        redo() { 
+          data.value = {...data.value, blocks: after }
+        },
+        undo() {
+          data.value = {...data.value, blocks: before }
+        }
+      }
+    }
+  })
+  registry({
     name: "placeTop",
     pushQueue: true,
     execute() {

@@ -1,6 +1,7 @@
 import "./index.scss"
-import { defineComponent, inject } from "vue" 
+import { defineComponent, inject, reactive, watch } from "vue" 
 import { ElButton, ElColorPicker, ElForm, ElFormItem, ElInput, ElOption, ElSelect } from "element-plus"
+import deepcopy from "deepcopy"
 
 export default defineComponent({
   name: "EditorOperator",
@@ -11,19 +12,44 @@ export default defineComponent({
     },
     data: {
       type: Object
+    },
+    updateContainer: {
+      type: Function
+    },
+    updateBlockComponent: {
+      type: Function
     }
   },
   setup(props,ctx) {
+    const config = inject("config")
+    const state = reactive({
+      editData: {}
+    })
+    const reset = () => {
+      if(!props.block) {
+        state.editData = deepcopy(props.data.container)
+      } else {
+        state.editData = deepcopy(props.block)
+      }
+    }
+    const apply = () => {
+      if(!props.block) {
+        props.updateContainer({...props.data,container: state.editData})
+      } else {
+        props.updateBlockComponent(state.editData,props.block)
+      }
+    }
+    watch(() => props.block,reset,{immediate: true})
+
     return () => {
-      const config = inject("config")
-      let content = []
+      const content = []
       if(!props.block) {
         content.push(<>
           <ElFormItem label="容器宽度">
-            <ElInput></ElInput>
+            <ElInput v-model={state.editData.width}></ElInput>
           </ElFormItem>
           <ElFormItem label="容器高度">
-            <ElInput></ElInput>
+            <ElInput v-model={state.editData.height}></ElInput>
           </ElFormItem>
         </>)
       } else {
@@ -33,9 +59,9 @@ export default defineComponent({
             return <ElFormItem label={propConfig.label}>
               {
                 {
-                  input: () => <ElInput></ElInput>,
-                  color: () => <ElColorPicker></ElColorPicker>,
-                  select: () => <ElSelect>
+                  input: () => <ElInput v-model={state.editData.props[propName]}></ElInput>,
+                  color: () => <ElColorPicker v-model={state.editData.props[propName]}></ElColorPicker>,
+                  select: () => <ElSelect v-model={state.editData.props[propName]}>
                     {
                       propConfig.options.map(opt => {
                         return <ElOption label={opt.label} value={opt.value}></ElOption>
@@ -47,14 +73,22 @@ export default defineComponent({
             </ElFormItem>
           }))
         }
+
+        if(component && component.model) {
+         content.push(Object.entries(component.model).map(([modelName,label]) => {
+           return <ElFormItem label={label}>
+             <ElInput v-model={state.editData.model[modelName]}></ElInput>
+           </ElFormItem>
+         }))
+        }
       }
 
       return <div class="editor-operator">
         <ElForm labelPosition="top">
           { content }
           <ElFormItem>
-            <ElButton type="primary">保存</ElButton>
-            <ElButton>重置</ElButton>
+            <ElButton type="primary" onClick={apply}>保存</ElButton>
+            <ElButton onClick={reset}>重置</ElButton>
           </ElFormItem>
         </ElForm>
       </div>

@@ -3,6 +3,7 @@ import deepcopy from "deepcopy"
 import { ElButton, ElIcon, ElInput } from "element-plus"
 import { $dialog$ } from "../components/dialog"
 import { DropdownItem } from "../components/dropdown"
+import Range from "../components/range"
 
 function createEditorConfig() {
   const componentList = []
@@ -46,10 +47,9 @@ const fontSizeOptions = [
 ]
 
 const buttonSizeOptions = [
-  { label: "默认",value: "" },
-  { label: "中等",value: "medium" },
+  { label: "默认",value: "default" },
+  { label: "大",value: "large" },
   { label: "小",value: "small" },
-  { label: "极小",value: "mini" },
 ] 
 const buttonTypeOptions = [
   { label: "默认",value: "primary" },
@@ -85,13 +85,16 @@ registerConfig.registerComponent({
   preview: () => {
     return "预览文本"
   },
-  render: () => {
-    return "渲染文本"
+  render: ({props}) => {
+    return <span style={{
+      color: props.color,
+      fontSize: props.fontSize
+    }}>{props.text || "渲染文本"}</span>
   },
   props: {
     text: createInputProp("文本内容"),
     color: createColorProp("字体颜色"),
-    size: createSelectProp("字体大小",fontSizeOptions),
+    fontSize: createSelectProp("字体大小",fontSizeOptions),
   }
 })
 registerConfig.registerComponent({
@@ -102,15 +105,19 @@ registerConfig.registerComponent({
       预览按钮
     </ElButton>
   },
-  render: () => {
-    return <ElButton>
-      渲染按钮
+  render: ({props}) => {
+    return <ElButton type={props.type} size={props.size} style={{
+      color: props.color,
+      fontSize: props.fontSize
+    }}>
+      {props.text || "渲染按钮"}
     </ElButton>
   },
   props: {
     text: createInputProp("按钮内容"),
     color: createColorProp("字体颜色"),
-    size: createSelectProp("按钮类型",buttonSizeOptions),
+    fontSize: createSelectProp("字体大小",fontSizeOptions),
+    size: createSelectProp("按钮大小",buttonSizeOptions),
     type: createSelectProp("按钮类型",buttonTypeOptions),
   }
 })
@@ -118,14 +125,38 @@ registerConfig.registerComponent({
   key: "input",
   label: "输入框",
   preview: () => {
-    return <ElInput placeholder="预览输入框">
-
-    </ElInput>
+    return <ElInput placeholder="预览输入框"></ElInput>
   },
-  render: () => {
-    return <ElInput placeholder="渲染输入框">
-      
-    </ElInput>
+  render: ({model,props}) => {
+    return <ElInput 
+      placeholder="渲染输入框"
+      {...model.default}
+    ></ElInput>
+  },
+  model: {
+    default: "绑定字段"
+  },
+  props: {
+
+  }
+})
+registerConfig.registerComponent({
+  key: "range",
+  label: "范围选择器",
+  preview: () => {
+    return <Range></Range>
+  },
+  render: ({model,props}) => {
+    return <Range {...{
+      start: model.start.modelValue,
+      "onUpdate:start": model.start["onUpdate:modelValue"],
+      end: model.end.modelValue,
+      "onUpdate:end": model.end["onUpdate:modelValue"],
+    }}></Range>
+  },
+  model: {
+    start: "开始范围字段",
+    end: "结束范围字段",
   },
   props: {
 
