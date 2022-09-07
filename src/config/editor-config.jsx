@@ -1,4 +1,4 @@
-import { Back, CopyDocument, Delete, Edit, Expand, Fold, Right, View } from "@element-plus/icons-vue"
+import { Back, Close, CopyDocument, Delete, Edit, Expand, Fold, Right, View } from "@element-plus/icons-vue"
 import { ElButton, ElIcon, ElInput } from "element-plus"
 
 function createEditorConfig() {
@@ -124,7 +124,7 @@ registerConfig.registerToolbar({
   },
   commandName: "deleteComponent",
 })
-registerConfig.registerToolbar((previewRef,focusUse) => {
+registerConfig.registerToolbar(({previewRef,focusUse}) => {
   return {
     label: previewRef.value ? "编辑" : "预览",
     render: () => {
@@ -139,4 +139,15 @@ registerConfig.registerToolbar((previewRef,focusUse) => {
       focusUse.clearBlockFocus()
     },
   }
+})
+registerConfig.registerToolbar({
+  label: "关闭",
+  render: () => {
+    return <ElIcon>
+      <Close></Close>
+    </ElIcon>
+  },
+  handler() {
+    
+  },
 })

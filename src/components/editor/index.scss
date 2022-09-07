@@ -135,3 +135,16 @@
     }
   }
 }
+
+.container-canvas-preview {
+  .canvas-content {
+    margin: 20px auto;
+    position: relative;
+    border: 1px solid $primary;
+    border-radius: 4px;
+  }
+  .footer {
+    display: flex;
+    justify-content: center;
+  }
+}

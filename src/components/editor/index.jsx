@@ -6,6 +6,7 @@ import { useMenuDragger } from "./use-menu-dragger"
 import { useFocus } from "./use-focus"
 import { useBlockDragger } from "./use-block-Dragger"
 import { useCommand } from "./use-command"
+import { ElButton } from "element-plus"
 
 export default defineComponent({
   props: {
@@ -23,6 +24,7 @@ export default defineComponent({
   setup(props,ctx) {
 
     const previewRef = ref(false)
+    const editorRef = ref(true)
     provide("config",props.config)
 
     const data = computed({
@@ -49,66 +51,91 @@ export default defineComponent({
     const command = useCommand(data,focusData)
     
     return () => 
-      <div class="editor">
-        <div class="editor-left">
-          {
-            props.config.componentList.map(component => (
-              <div 
-                class="component-item"
-                draggable
-                onDragstart={event => dragstart(event,component)}
-                onDragend={event => dragend(event)}
-              >
-                <span>{component.label}</span>
-                <div>{component.preview()}</div>
-              </div>
-            ))
-          }
+      previewRef.value ?
+      (
+        <div class="container-canvas-preview">
+          <div 
+            ref={containerRef} 
+            class="canvas-content"
+            style={containerStyles.value}
+          >
+            {
+              data.value.blocks.map((block,index) => {
+                return <EditorBlock 
+                  class={previewRef.value ? "block-preview" : ''}
+                  block={block}
+                ></EditorBlock>
+              })
+            }
+          </div>
+          <div class="footer">
+            <ElButton type="primary" onClick={() => previewRef.value=false}>返回</ElButton>
+          </div>
         </div>
-        <div class="editor-top">
-          {
-            props.config.toolbarList.map(toolbar => {
-              if(typeof toolbar === "function") {
-                toolbar = toolbar(previewRef,focusUse)
-              }
-              const RenderToolbar = toolbar.render()
-              return <div class="toolbar-item" onClick={toolbar.handler ? toolbar.handler : command.commands[toolbar.commandName]}>
-                {RenderToolbar}
-                <span>{toolbar.label}</span>
-              </div>
-            })
-          }
-        </div>
-        <div class="editor-right">
+      )
+      :
+      (
+        <div class="editor">
+          <div class="editor-left">
+            {
+              props.config.componentList.map(component => (
+                <div 
+                  class="component-item"
+                  draggable
+                  onDragstart={event => dragstart(event,component)}
+                  onDragend={event => dragend(event)}
+                >
+                  <span>{component.label}</span>
+                  <div>{component.preview()}</div>
+                </div>
+              ))
+            }
+          </div>
+          <div class="editor-top">
+            {
+              props.config.toolbarList.map(toolbar => {
+                if(typeof toolbar === "function") {
+                  toolbar = toolbar({editorRef,previewRef,focusUse})
+                }
+                const RenderToolbar = toolbar.render()
+                return <div class="toolbar-item" onClick={toolbar.handler ? toolbar.handler : command.commands[toolbar.commandName]}>
+                  {RenderToolbar}
+                  <span>{toolbar.label}</span>
+                </div>
+              })
+            }
+          </div>
+          <div class="editor-right">
 
-        </div>
-        <div class="editor-container">
-          <div class="container-canvas">
-            <div 
-              ref={containerRef} 
-              class="canvas-content" 
-              style={containerStyles.value}
-              onMousedown={event => containerMousedown(event)}
-            >
-              {
-                data.value.blocks.map((block,index) => {
-                  return <EditorBlock 
-                    class={block.focus ? "block-focus" : ''}
-                    class={previewRef.value ? "block-preview" : ''}
-                    block={block}
-                    onMousedown={event => blockMousedown(event,block,index)}
-                  ></EditorBlock>
-                })
-              }
-              {
-                markline.x !== null && <div class="line-x" style={{left: `${markline.x}px`}}></div>
-              }
-              {
-                markline.y !== null && <div class="line-y" style={{top: `${markline.y}px`}}></div>
-              }
+          </div>
+          <div class="editor-container">
+            <div class="container-canvas">
+              <div 
+                ref={containerRef} 
+                class="canvas-content" 
+                style={containerStyles.value}
+                onMousedown={event => containerMousedown(event)}
+              >
+                {
+                  data.value.blocks.map((block,index) => {
+                    return <EditorBlock 
+                      class={block.focus ? "block-focus" : ''}
+                      class={previewRef.value ? "block-preview" : ''}
+                      block={block}
+                      onMousedown={event => blockMousedown(event,block,index)}
+                    ></EditorBlock>
+                  })
+                }
+                {
+                  markline.x !== null && <div class="line-x" style={{left: `${markline.x}px`}}></div>
+                }
+                {
+                  markline.y !== null && <div class="line-y" style={{top: `${markline.y}px`}}></div>
+                }
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )
   }
 })
