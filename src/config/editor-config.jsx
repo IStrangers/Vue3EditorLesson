@@ -1,5 +1,7 @@
 import { Back, Close, CopyDocument, Delete, Edit, Expand, Fold, Right, View } from "@element-plus/icons-vue"
 import deepcopy from "deepcopy"
+import { ElSelect } from "element-plus"
+import { ElOption } from "element-plus"
 import { ElButton, ElIcon, ElInput } from "element-plus"
 import { $dialog$ } from "../components/dialog"
 import { DropdownItem } from "../components/dropdown"
@@ -76,6 +78,13 @@ const createSelectProp = (label,options) => {
     type: "select",
     label,
     options,
+  }
+}
+const createTableProp = (label,table) => {
+  return {
+    type: "table",
+    label,
+    table,
   }
 }
 
@@ -160,6 +169,38 @@ registerConfig.registerComponent({
   },
   props: {
 
+  }
+})
+registerConfig.registerComponent({
+  key: "select",
+  label: "下拉框",
+  preview: () => {
+    return <ElSelect modelValue=""></ElSelect>
+  },
+  render: ({model,props}) => {
+    return <ElSelect {...model.default}>
+      {
+        (props.options || []).map((opt,index) => {
+          return <ElOption 
+            label={opt.label} 
+            value={opt.value} 
+            key={opt.value}>
+          </ElOption>
+        })
+      }
+    </ElSelect>
+  },
+  model: {
+    default: "绑定字段"
+  },
+  props: {
+    options: createTableProp("下拉选项",{
+      key: "label",
+      options: [
+        { label: "显示值",field: "label" },
+        { label: "绑定值",field: "value" },
+      ]
+    })
   }
 })
 

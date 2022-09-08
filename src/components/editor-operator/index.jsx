@@ -2,6 +2,7 @@ import "./index.scss"
 import { defineComponent, inject, reactive, watch } from "vue" 
 import { ElButton, ElColorPicker, ElForm, ElFormItem, ElInput, ElOption, ElSelect } from "element-plus"
 import deepcopy from "deepcopy"
+import EditorTable from "../editor-table"
 
 export default defineComponent({
   name: "EditorOperator",
@@ -55,20 +56,21 @@ export default defineComponent({
       } else {
         const component = config.componentMap[props.block.key]
         if(component && component.props) {
-          content.push(Object.entries(component.props).map(([propName,propConfig]) => {
-            return <ElFormItem label={propConfig.label}>
+          content.push(Object.entries(component.props).map(([propName,propsConfig]) => {
+            return <ElFormItem label={propsConfig.label}>
               {
                 {
                   input: () => <ElInput v-model={state.editData.props[propName]}></ElInput>,
                   color: () => <ElColorPicker v-model={state.editData.props[propName]}></ElColorPicker>,
                   select: () => <ElSelect v-model={state.editData.props[propName]}>
                     {
-                      propConfig.options.map(opt => {
+                      propsConfig.options.map(opt => {
                         return <ElOption label={opt.label} value={opt.value}></ElOption>
                       })
                     }
-                  </ElSelect>
-                }[propConfig.type]()
+                  </ElSelect>,
+                  table: () => <EditorTable propsConfig={propsConfig} v-model={state.editData.props[propName]}></EditorTable>
+                }[propsConfig.type]()
               }
             </ElFormItem>
           }))

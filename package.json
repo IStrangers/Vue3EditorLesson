@@ -16,7 +16,7 @@
     "element-plus": "^2.2.16",
     "mitt": "^3.0.0",
     "sass": "^1.54.8",
-    "vue": "^3.2.37",
+    "vue": "^3.2.39",
     "vue3-json-viewer": "^2.2.2"
   },
   "devDependencies": {

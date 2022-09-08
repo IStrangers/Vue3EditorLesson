@@ -23,6 +23,7 @@
   }
   &-left{
     left: 0;
+    overflow: auto;
     background: #fff;
     border: 1px solid rgba(31,56,88,.1);
 
@@ -70,6 +71,7 @@
   &-right {
     right: 0;
     border: 1px solid rgba(31, 56, 88, 0.1);
+    overflow: auto;
   }
   &-top {
     position: absolute;
@@ -105,15 +107,19 @@
     box-sizing: border-box;
     .container-canvas {
       height: 100%;
+      overflow: auto;
+      justify-content: center;
+      display: flex;
 
       .canvas-content{
         border-radius: 4px;
         position: relative;
-        margin: 20px auto;
-        width: 1000px;
+        margin: 15px;
+        width: 97%;
         background: #fff;
         height: calc(100vh - 85px);
         overflow: hidden;
+        border: 1px solid rgba(31, 56, 88, 0.1);
         &:hover,
         &.hover {
           border: 1px solid $primary;
