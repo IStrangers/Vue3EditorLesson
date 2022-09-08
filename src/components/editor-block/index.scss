@@ -2,6 +2,7 @@
 
 .editor-block {
   position: absolute;
+  user-select: none;
   &::after {
     content: "";
     position: absolute;
@@ -26,7 +27,8 @@
     }
   }
 
-  .el-button {
+  .el-button,
+  .el-input {
     transition: none;
   }
 }

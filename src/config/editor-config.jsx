@@ -109,16 +109,20 @@ registerConfig.registerComponent({
 registerConfig.registerComponent({
   key: "button",
   label: "按钮",
+  resize: {
+    width: true,
+    height: true
+  },
   preview: () => {
     return <ElButton>
       预览按钮
     </ElButton>
   },
-  render: ({props}) => {
-    return <ElButton type={props.type} size={props.size} style={{
+  render: ({props,style}) => {
+    return <ElButton type={props.type} size={props.size} style={Object.assign(style,{
       color: props.color,
       fontSize: props.fontSize
-    }}>
+    })}>
       {props.text || "渲染按钮"}
     </ElButton>
   },
@@ -133,11 +137,15 @@ registerConfig.registerComponent({
 registerConfig.registerComponent({
   key: "input",
   label: "输入框",
+  resize: {
+    width: true,
+  },
   preview: () => {
     return <ElInput placeholder="预览输入框"></ElInput>
   },
-  render: ({model,props}) => {
+  render: ({model,props,style}) => {
     return <ElInput 
+      style={Object.assign(style,{})}
       placeholder="渲染输入框"
       {...model.default}
     ></ElInput>
@@ -152,16 +160,22 @@ registerConfig.registerComponent({
 registerConfig.registerComponent({
   key: "range",
   label: "范围选择器",
+  resize: {
+    width: true,
+  },
   preview: () => {
     return <Range></Range>
   },
-  render: ({model,props}) => {
-    return <Range {...{
-      start: model.start.modelValue,
-      "onUpdate:start": model.start["onUpdate:modelValue"],
-      end: model.end.modelValue,
-      "onUpdate:end": model.end["onUpdate:modelValue"],
-    }}></Range>
+  render: ({model,props,style}) => {
+    return <Range 
+      style={Object.assign(style,{})}
+      {...{
+        start: model.start.modelValue,
+        "onUpdate:start": model.start["onUpdate:modelValue"],
+        end: model.end.modelValue,
+        "onUpdate:end": model.end["onUpdate:modelValue"],
+      }}
+    ></Range>
   },
   model: {
     start: "开始范围字段",
@@ -177,8 +191,10 @@ registerConfig.registerComponent({
   preview: () => {
     return <ElSelect modelValue=""></ElSelect>
   },
-  render: ({model,props}) => {
-    return <ElSelect {...model.default}>
+  render: ({model,props,style}) => {
+    return <ElSelect 
+      style={Object.assign(style,{})}
+      {...model.default}>
       {
         (props.options || []).map((opt,index) => {
           return <ElOption 

@@ -1,5 +1,6 @@
 import "./index.scss"
 import { defineComponent, computed, inject, ref, onMounted} from "vue" 
+import BlockResize from "../block-resize"
 
 export default defineComponent({
   name: "Block",
@@ -36,6 +37,10 @@ export default defineComponent({
     return () => {
       const component = config.componentMap[props.block.key]
       const RenderComponent = component.render({
+        style: {
+          width: props.block.isResize ? props.block.width : "",
+          height: props.block.isResize ? props.block.height : "",
+        },
         props: props.block.props,
         model: Object.keys(component.model || {}).reduce((prev,modelName) => {
           const propName = props.block.model[modelName]
@@ -49,6 +54,14 @@ export default defineComponent({
       return <div ref={blockRef} class="editor-block" style={blockStyle.value}>
         {
           RenderComponent
+        }
+        {
+          props.block.focus && component.resize && (
+            <BlockResize
+              block={props.block}
+              component={component}
+            ></BlockResize>
+          )
         }
       </div>
     }
