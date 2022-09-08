@@ -41,7 +41,7 @@ export default defineComponent({
           const propName = props.block.model[modelName]
           prev[modelName] = {
             modelValue: props.formData[propName],
-            "onUpdate:modelValue": value => rops.formData[propName] = value
+            "onUpdate:modelValue": value => props.formData[propName] = value
           }
           return prev
         },{})
