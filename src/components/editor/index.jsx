@@ -7,8 +7,8 @@ import { useFocus } from "./use-focus"
 import { useBlockDragger } from "./use-block-Dragger"
 import { useCommand } from "./use-command"
 import { ElButton } from "element-plus"
-import { $dropdown$ } from "../dropdown"
 import EditorOperator from "../editor-operator"
+import { useMenuBlock } from "./use-menu-block"
 
 export default defineComponent({
   name: "Editor",
@@ -55,17 +55,7 @@ export default defineComponent({
     const { focusData,lastSelectBlock,blockMousedown,containerMousedown } = focusUse
     const { markline,mousedown } = useBlockDragger(containerRef,focusData,lastSelectBlock)
     const command = useCommand(data,focusData)
-    
-    const onContextMenuBlock = (event,block) => {
-      event.preventDefault()
-      const dropdown = $dropdown$({
-        el: event.target,
-        render: () => {
-          return props.config.dropdownMenuList.map(dropdownMenu => dropdownMenu({block,command}))
-        }
-      })
-      dropdown.showDropdown()
-    }
+    const { onContextMenuBlock } = useMenuBlock(props,command)
 
     return () => 
       !previewRef.value ?
@@ -121,7 +111,6 @@ export default defineComponent({
                   data.value.blocks.map((block,index) => {
                     return <EditorBlock 
                       class={block.focus ? "block-focus" : ''}
-                      class={previewRef.value ? "block-preview" : ''}
                       block={block}
                       onMousedown={event => blockMousedown(event,block,index)}
                       onContextmenu={event => onContextMenuBlock(event,block)}

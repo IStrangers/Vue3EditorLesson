@@ -1,8 +1,8 @@
 import "./index.scss"
 import { defineComponent, inject, reactive, watch } from "vue" 
-import { ElButton, ElColorPicker, ElForm, ElFormItem, ElInput, ElOption, ElSelect } from "element-plus"
+import { ElButton, ElForm, ElFormItem, ElInput } from "element-plus"
 import deepcopy from "deepcopy"
-import EditorTable from "../editor-table"
+import { useComponentRender } from "./use-component-render"
 
 export default defineComponent({
   name: "EditorOperator",
@@ -42,6 +42,9 @@ export default defineComponent({
     }
     watch(() => props.block,reset,{immediate: true})
 
+    const componentRender = useComponentRender()
+
+
     return () => {
       const content = []
       if(!props.block) {
@@ -59,18 +62,7 @@ export default defineComponent({
           content.push(Object.entries(component.props).map(([propName,propsConfig]) => {
             return <ElFormItem label={propsConfig.label}>
               {
-                {
-                  input: () => <ElInput v-model={state.editData.props[propName]}></ElInput>,
-                  color: () => <ElColorPicker v-model={state.editData.props[propName]}></ElColorPicker>,
-                  select: () => <ElSelect v-model={state.editData.props[propName]}>
-                    {
-                      propsConfig.options.map(opt => {
-                        return <ElOption label={opt.label} value={opt.value}></ElOption>
-                      })
-                    }
-                  </ElSelect>,
-                  table: () => <EditorTable propsConfig={propsConfig} v-model={state.editData.props[propName]}></EditorTable>
-                }[propsConfig.type]()
+                componentRender[propsConfig.type](state,propName,propsConfig)
               }
             </ElFormItem>
           }))
@@ -84,7 +76,7 @@ export default defineComponent({
          }))
         }
       }
-
+      
       return <div class="editor-operator">
         <ElForm labelPosition="top">
           { content }
