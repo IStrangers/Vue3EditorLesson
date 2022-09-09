@@ -6,19 +6,22 @@
   "blocks": [
     {
       "key": "text",
-      "top": "100px",
-      "left": "100px",
+      "top": "124px",
+      "left": "293px",
       "zIndex": 1,
       "props": {
         "text": "文本测试",
         "color": "#0000FF",
         "fontSize": "14px"
-      }
+      },
+      "width": "56px",
+      "height": "21px",
+      "focus": false
     },
     {
       "key": "button",
-      "top": "200px",
-      "left": "200px",
+      "top": "346px",
+      "left": "625px",
       "zIndex": 1,
       "props": {
         "text": "按钮",
@@ -26,19 +29,75 @@
         "fontSize": "14px",
         "type": "primary",
         "size": "small"
-      }
+      },
+      "width": "52px",
+      "height": "25px",
+      "focus": false
     },
     {
       "key": "input",
-      "top": "300px",
-      "left": "300px",
+      "top": "411px",
+      "left": "177px",
       "zIndex": 1,
       "model": {
         "default": "userName"
       },
+      "props": {},
+      "width": "192px",
+      "height": "32px",
+      "focus": false
+    },
+    {
+      "key": "select",
+      "top": "527px",
+      "left": "507px",
+      "zIndex": 1,
+      "alignCenter": false,
+      "model": {
+        "default": "userName"
+      },
       "props": {
-
-      }
+        "options": [
+          {
+            "label": "温斯顿",
+            "value": "wsd"
+          },
+          {
+            "label": "戴格斯",
+            "value": "dgs"
+          },
+          {
+            "label": "威威",
+            "value": "ww"
+          },
+          {
+            "label": "任天堂",
+            "value": "rtt"
+          },
+          {
+            "label": "尔特",
+            "value": "et"
+          }
+        ]
+      },
+      "width": "214px",
+      "height": "32px",
+      "focus": false
+    },
+    {
+      "key": "range",
+      "top": "195px",
+      "left": "910px",
+      "zIndex": 1,
+      "alignCenter": false,
+      "model": {
+        "start": "start",
+        "end": "end"
+      },
+      "props": {},
+      "width": "220px",
+      "height": "30px",
+      "focus": false
     }
   ]
 }
