@@ -42,20 +42,20 @@ export default defineComponent({
     }
     watch(() => props.block,reset,{immediate: true})
 
+    const containerRender = <>
+      <ElFormItem label="容器宽度">
+        <ElInput v-model={state.editData.width}></ElInput>
+      </ElFormItem>
+      <ElFormItem label="容器高度">
+        <ElInput v-model={state.editData.height}></ElInput>
+      </ElFormItem>
+    </>
     const componentRender = useComponentRender()
-
 
     return () => {
       const content = []
       if(!props.block) {
-        content.push(<>
-          <ElFormItem label="容器宽度">
-            <ElInput v-model={state.editData.width}></ElInput>
-          </ElFormItem>
-          <ElFormItem label="容器高度">
-            <ElInput v-model={state.editData.height}></ElInput>
-          </ElFormItem>
-        </>)
+        content.push(containerRender)
       } else {
         const component = config.componentMap[props.block.key]
         if(component && component.props) {

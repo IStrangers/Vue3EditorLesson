@@ -36,7 +36,7 @@ const TableDialogComponent = defineComponent({
     const onCancel = () => {
       hideTableDialog()
     }
-    const conConfirm = () => {
+    const onConfirm = () => {
       state.option.onConfirm && state.option.onConfirm(state.editData)
       hideTableDialog()
     }
@@ -44,15 +44,15 @@ const TableDialogComponent = defineComponent({
       state.editData.push({})
     }
     const del = (index) => {
-      state.editData = state.editData.slice(index,1)
+      state.editData.splice(index,1)
     }
     const reset = () => {
-      
+      state.editData = []
     }
     return () => {
       return <ElDialog v-model={state.isShow} title={state.option.title}>
         {{
-            default: () => <div>
+            default: () => <>
               <ElButton onClick={add}>添加</ElButton>
               <ElButton onClick={reset}>重置</ElButton>
               <ElTable
@@ -69,14 +69,16 @@ const TableDialogComponent = defineComponent({
                   })
                 }
                 <ElTableColumn label="操作">
-                  <ElButton type="danger" onClick={del()}>删除</ElButton>
+                    {{
+                      default: ({$index}) => <ElButton type="danger" onClick={() => del($index)}>删除</ElButton>
+                    }}
                 </ElTableColumn>
               </ElTable>
-            </div>,
-            footer: () => <div>
+            </>,
+            footer: () => <>
               <ElButton onClick={onCancel}>取消</ElButton>
-              <ElButton onClick={conConfirm} type="primary">确定</ElButton>
-            </div>
+              <ElButton onClick={onConfirm} type="primary">确定</ElButton>
+            </>
         }}
       </ElDialog>
     }

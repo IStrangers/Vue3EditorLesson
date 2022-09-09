@@ -1,13 +1,9 @@
 @import "../../config/var-style.scss";
 
-// ::-webkit-scrollbar {
-// 	width: 8px;
-// }
-
-// ::-webkit-scrollbar-thumb {
-// 	background-color: #eaecf1;
-// 	border-radius: 3px;
-// }
+.el-button,
+.el-input {
+  transition: none;
+}
 
 .editor {
   background: #f2f4f5;
