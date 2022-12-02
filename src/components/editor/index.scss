@@ -1,5 +1,19 @@
 @import "../../config/var-style.scss";
 
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  box-shadow: inset 0 0 5px rgb(0 0 0 / 20%);
+  background: rgba(204,204,204,0.5);
+}
+::-webkit-scrollbar-track {
+  border-radius: 2px;
+  background: rgba(247,247,247,1);
+}
+
 .el-button,
 .el-input {
   transition: none;
