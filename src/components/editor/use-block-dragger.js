@@ -9,7 +9,7 @@ export function useBlockDragger(containerRef,focusData,lastSelectBlock) {
   })
   const mousedown = (event) => {
     const block = lastSelectBlock.value
-    const lasbLeft = parseFloat(block.left)
+    const lsbLeft = parseFloat(block.left)
     const lsbTop = parseFloat(block.top)
     const lsbWidth = parseFloat(block.width)
     const lsbHeight = parseFloat(block.height)
@@ -17,7 +17,7 @@ export function useBlockDragger(containerRef,focusData,lastSelectBlock) {
       dragging: false,
       startX: event.clientX,
       startY: event.clientY,
-      startLeft: lasbLeft,
+      startLeft: lsbLeft,
       startTop: lsbTop,
       startPos: focusData.value.focus.map(({top,left}) => ({top,left})),
       lines: (() => {
